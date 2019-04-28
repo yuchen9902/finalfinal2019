@@ -32,52 +32,53 @@ import unirest.Unirest;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
-
-
+    private static final String TAG = "LoveCalculator1stEdition:Main";
+    private RequestQueue requestQueue;
+    private TextView percentage;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestQueue = Volley.newRequestQueue(this);
+        percentage = findViewById(R.id.percentage);
         setContentView(R.layout.activity_main);
-        RequestQueue queue = Volley.newRequestQueue(this);
-        String url = "https://love-calculator.p.rapidapi.com/getPercentage?fname=John&sname=Alice";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
-                    public void onResponse(String response) {
-                        Log.d("Debug", response);
+        Button button = findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                String url = "https://love-calculator.p.rapidapi.com/getPercentage?fname=John&sname=Alice";
+                StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                        new Response.Listener<String>() {
+                            public void onResponse(String response) {
+                                try {
+                                    JsonParser parser = new JsonParser();
+                                    JsonObject result = parser.parse(response).getAsJsonObject();
+                                    //JsonArray resultArray = parser.parse(response).getAsJsonArray();
+                                    String percentages = result.get("percentage").getAsString();
+                                    //String resultPercentage = percentages.getAsString();
+                                    percentage.setVisibility(View.VISIBLE);
+                                    percentage.setText(percentages);
+                                    //percentage.setText("hahahah");
+                                    //Log.d("Debug", response);
+                                } catch (final Exception e) {
+                                    Log.e(TAG, "no json");
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Debug", error.toString());
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Debug", error.toString());
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> params = new HashMap<String, String>();
+                        params.put("X-RapidAPI-Host", "love-calculator.p.rapidapi.com");
+                        params.put("X-RapidAPI-Key", "d5cc839b0amshba8d8fcbbdc615cp1f6908jsn48f5b1162ff2");
+                        return params;
+                    }
+                };
+                requestQueue.add(stringRequest);
             }
-        }) {
-            @Override
-            public Map<String, String> getHeaders() throws AuthFailureError {
-                Map<String, String> params = new HashMap<String, String>();
-                params.put("X-RapidAPI-Host", "love-calculator.p.rapidapi.com");
-                params.put("X-RapidAPI-Key", "ddb2ddfd21msh545fdbc2222d20dp1ba2f6jsn6d9725535c4a");
-                return params;
-            }
-        };
-        queue.add(stringRequest);
-    }
-
-
-    EditText firstName,firstname;
-    TextView tv;
-    String result;
-    public void showResult(View v) {
-        firstName = (EditText) findViewById(R.id.editText);
-        firstname = (EditText) findViewById(R.id.editText2);
-        tv = (TextView)findViewById(R.id.editText3);
-        String f = firstName.getText().toString();
-        String s = firstname.getText().toString();
-        String sum = s + f;
-        sum = sum.toLowerCase();
-        int value = sum.hashCode();
-        Random random = new Random(value);
-        result = (random.nextInt(100) + 1) + "%";
-        tv.setText(result);
-
+        });
     }
 }
