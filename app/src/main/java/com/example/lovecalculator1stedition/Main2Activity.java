@@ -27,6 +27,7 @@ public class Main2Activity extends AppCompatActivity {
     private static final String TAG = "LoveCalculator1stEdition:Main";
     private RequestQueue requestQueue;
     private TextView percentage;
+    private TextView afraid;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -40,7 +41,7 @@ public class Main2Activity extends AppCompatActivity {
         Intent intent = getIntent();
         String firstname = intent.getStringExtra("first");
         String secondname = intent.getStringExtra("second");
-
+        afraid = findViewById(R.id.afraid);
         Button button = findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,13 +52,16 @@ public class Main2Activity extends AppCompatActivity {
                         new Response.Listener<String>() {
                             public void onResponse(String response) {
                                 try {
+                                    afraid = findViewById(R.id.afraid);
                                     percentage = findViewById(R.id.percentage);
                                     JsonParser parser = new JsonParser();
                                     JsonObject result = parser.parse(response).getAsJsonObject();
                                     String percentages = result.get("percentage").getAsString();
+                                    String outcome = result.get("result").getAsString();
                                     //String resultPercentage = percentages.getAsString();
                                     //percentage.setVisibility(View.VISIBLE);
                                     percentage.setText(percentages);
+                                    afraid.setText(outcome);
                                     Log.d("Debug", response);
                                 } catch (final Exception e) {
                                     Log.e(TAG, "no json");
