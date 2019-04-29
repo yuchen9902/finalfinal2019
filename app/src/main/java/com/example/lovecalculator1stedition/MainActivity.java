@@ -26,15 +26,21 @@ public class MainActivity extends AppCompatActivity {
     private void configurebutton() {
         Button button = findViewById(R.id.calculate);
 
-        Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+        //Intent intent = new Intent(MainActivity.this, Main2Activity.class);
 
-        intent.putExtra("first", getTextIn(R.id.firstname));
-        intent.putExtra("second", getTextIn(R.id.secondname));
+        //intent.putExtra("first", getTextIn(R.id.firstname));
+        //intent.putExtra("second", getTextIn(R.id.secondname));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+
+                intent.putExtra("first", getTextIn(R.id.firstname));
+                intent.putExtra("second", getTextIn(R.id.secondname));
                 startActivity(intent);
+
+                finish();
             }
         });
     }
