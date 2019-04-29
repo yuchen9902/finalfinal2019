@@ -56,7 +56,7 @@ public class Main2Activity extends AppCompatActivity {
                                     percentage = findViewById(R.id.percentage);
                                     JsonParser parser = new JsonParser();
                                     JsonObject result = parser.parse(response).getAsJsonObject();
-                                    String percentages = result.get("percentage").getAsString();
+                                    String percentages = result.get("percentage").getAsString() + '%';
                                     String outcome = result.get("result").getAsString();
                                     //String resultPercentage = percentages.getAsString();
                                     //percentage.setVisibility(View.VISIBLE);
